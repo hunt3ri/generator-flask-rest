@@ -1,0 +1,15 @@
+{
+  "name": "<%= name %>",
+  "version": "1.0.0",
+  "description": "App description goes here",
+  "main": "manage.py",
+  "scripts": {
+    "test": "python manage.py runserver"
+  },
+  "author": "Your name here",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
