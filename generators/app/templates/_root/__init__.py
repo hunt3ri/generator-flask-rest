@@ -1,7 +1,5 @@
 from flask import Flask
 
-
-
 def bootstrap_app():
     """
     Simple bootstrap function that intialises the app and any config

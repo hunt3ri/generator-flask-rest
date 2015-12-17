@@ -34,22 +34,20 @@ module.exports = yeoman.generators.Base.extend({
         app: function () {
             console.log('Scaffolding Flask Basic app in directory : ' + this.appName);
             mkdirp(this.appName);
+            
+            // Copy root dir files individually, can't use bulk copy here
+            this.copy('_root/__init__.py', appDir + '/__init__.py', null);
+            this.copy('_root/manage.py', this.appName + '/manage.py', null);
+            this.copy('_root/.gitignore', this.appName + '/.gitignore', null);
+            
+            // Copy scaffold files into the app
             var appDir = this.appName + "/app";
-
-            this.fs.copyTpl(
-                this.templatePath('_root/package.json'),
-                this.destinationPath(this.appName + '/package.json'),
-                {name: this.appName}
-            );
-
-
         }
     },
-
+    
     install: function () {
-        var npmdir = process.cwd() + this.appName;
-        process.chdir(npmdir);
-
-        this.installDependencies()
-    }
+      console.log("One more thing.  Creating python virtual environment...");
+      this.spawnCommand('pyvenv', [this.appName + '/venv']);
+      /*this.spawnCommand('source', ['./' + this.appName + '/venv/bin/activate']);*/
+  }
 });
