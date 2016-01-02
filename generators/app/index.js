@@ -36,18 +36,21 @@ module.exports = yeoman.generators.Base.extend({
             mkdirp(this.appName);
             
             // Copy root dir files individually, can't use bulk copy here
-            this.copy('_root/__init__.py', appDir + '/__init__.py', null);
             this.copy('_root/manage.py', this.appName + '/manage.py', null);
             this.copy('_root/.gitignore', this.appName + '/.gitignore', null);
+            this.copy('_root/requirements.txt', this.appName + '/requirements.txt', null);
             
             // Copy scaffold files into the app
             var appDir = this.appName + "/app";
+            this.bulkDirectory('_app', appDir, null)
         }
     },
     
     install: function () {
-      console.log("One more thing.  Creating python virtual environment...");
-      this.spawnCommand('pyvenv', [this.appName + '/venv']);
-      /*this.spawnCommand('source', ['./' + this.appName + '/venv/bin/activate']);*/
+      console.log("Creating python virtual environment...");
+      this.spawnCommandSync('pyvenv', [this.appName + '/venv']);
+      
+      
+      
   }
 });
