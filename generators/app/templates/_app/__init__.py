@@ -6,11 +6,11 @@ import os
 
 def bootstrap_app():
     """
-    Bootstrap function that intialises the app and any config
+    Bootstrap function that intialises the app and config
     """
     app = Flask(__name__)
 
-    # Set Config, default to Dev if config not set
+    # Load Config, default to Dev if config environment var not set
     env = os.environ.get('FLASK_REST_CONFIG', 'Dev')
     app.config.from_object('app.config.%sConfig' % env.capitalize())
 
@@ -21,5 +21,9 @@ def bootstrap_app():
     api.add_resource(Resolution,
                      '/api/resolution',
                      '/api/resolution/<int:res_id>', endpoint='test')
+                     
+    # Register web blueprint to allow us to show welcome page
+    from .web import main as main_blueprint
+    app.register_blueprint(main_blueprint)
     
     return app
