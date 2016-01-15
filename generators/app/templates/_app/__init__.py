@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, make_response
 from flask_restful import Api
 from .api.resources.resolutions import Resolutions
-from mongoengine import connect
+from mongoengine import connect, Document
 from pymongo import uri_parser
+import json
 import os
 
 
@@ -19,7 +20,7 @@ def bootstrap_app():
     # Initialise mongo db with app instance and config
     if 'MONGODB_SETTINGS' in app.config:
         # Connection settings provided as a dictionary.
-        create_connection(app.config['MONGODB_SETTINGS'])
+        create_mongo_connection(app.config['MONGODB_SETTINGS'])
     else:
         # Connection settings provided in standard format.
         settings = {'alias': app.config.get('MONGODB_ALIAS', None),
@@ -28,10 +29,13 @@ def bootstrap_app():
                     'password': app.config.get('MONGODB_PASSWORD', None),
                     'port': app.config.get('MONGODB_PORT', None),
                     'username': app.config.get('MONGODB_USERNAME', None)}
-        create_connection(settings)
+        create_mongo_connection(settings)
 
     # Initialise flask_restful with app instance
-    api = Api(app)
+    api = Api(app, default_mediatype='application/json')
+
+    # Set json representation that can handle mongo types
+    api.representations['application/json'] = output_json
     
     # Setup API routes
     api.add_resource(Resolutions,
@@ -45,20 +49,45 @@ def bootstrap_app():
     return app
 
 
-def create_connection(conn_settings):
+def output_json(obj, status_code, headers=None):
     """
-    Create Connection method from flask_mongoengine project, with many thanks
-    https://github.com/MongoEngine/flask-mongoengine
+    Use customised JSON formatter because Mongo objects get serilaized to json twice otherwise.
+    :param obj: The object to serialize as JSON
+    :param status_code: The HTTP status code that will be returned with the response
+    :param headers: Any HTTP headers that should be returned
+    :return: HTTP response containing the JSON, Status Code and Headers
+    """
+
+    # If the object is a Mongo Document make sure we use the inbuilt serializer to avoid corrupted output.
+    if isinstance(obj, Document):
+        json_output = obj.to_json()
+    else:
+        try:
+            json_output = json.dumps(obj)
+        except TypeError:
+            raise TypeError("Object is not JSON serializable, try passing dict representation instead, eg obj.__dict__")
+
+    resp = make_response(json_output, status_code)
+    resp.headers.extend(headers or {})
+
+    return resp
+
+
+def create_mongo_connection(conn_settings):
+    """
+    Parse connection settings and initialise connection to Mongo Database.  Method from flask_mongoengine project,
+    with many thanks - https://github.com/MongoEngine/flask-mongoengine
+    :param conn_settings: Settings read from config file
     """
 
     # Handle multiple connections recursively
     if isinstance(conn_settings, list):
         connections = {}
         for conn in conn_settings:
-            connections[conn.get('alias')] = create_connection(conn)
+            connections[conn.get('alias')] = create_mongo_connection(conn)
         return connections
 
-    # Ugly dict comprehention in order to support python 2.6
+    # Ugly dict comprehension in order to support python 2.6
     conn = dict((k.lower(), v) for k, v in conn_settings.items() if v is not None)
 
     if 'replicaset' in conn:
@@ -69,4 +98,5 @@ def create_connection(conn_settings):
         uri_dict = uri_parser.parse_uri(conn['host'])
         conn['db'] = uri_dict['database']
 
-    return connect(conn.pop('db', 'test'), **conn)
+    # Connect to mongo :-)
+    connect(conn.pop('db', 'test'), **conn)
