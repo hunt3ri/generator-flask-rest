@@ -36,11 +36,11 @@ def bootstrap_app():
 
     # Set json representation that can handle mongo types
     api.representations['application/json'] = output_json
-    
+
     # Setup API routes
     api.add_resource(Resolutions,
                      '/api/resolution',
-                     '/api/resolution/<int:res_id>', endpoint='test')
+                     '/api/resolution/<string:id>', endpoint='iain_route')
                      
     # Register web blueprint to allow us to show welcome page
     from .web import main as main_blueprint
