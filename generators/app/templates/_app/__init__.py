@@ -40,7 +40,7 @@ def bootstrap_app():
     # Setup API routes
     api.add_resource(Resolutions,
                      '/api/resolution',
-                     '/api/resolution/<string:id>', endpoint='iain_route')
+                     '/api/resolution/<string:_id>', endpoint='iain_route')
                      
     # Register web blueprint to allow us to show welcome page
     from .web import main as main_blueprint
