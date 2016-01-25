@@ -31,22 +31,28 @@ def bootstrap_app():
                     'username': app.config.get('MONGODB_USERNAME', None)}
         create_mongo_connection(settings)
 
-    # Initialise flask_restful with app instance
-    api = Api(app, default_mediatype='application/json')
-
-    # Set json representation that can handle mongo types
-    api.representations['application/json'] = output_json
-
-    # Setup API routes
-    api.add_resource(Resolutions,
-                     '/api/resolution',
-                     '/api/resolution/<string:_id>', endpoint='iain_route')
+    define_flask_restful_routes(app)
                      
     # Register web blueprint to allow us to show welcome page
     from .web import main as main_blueprint
     app.register_blueprint(main_blueprint)
     
     return app
+
+
+def define_flask_restful_routes(app):
+    """
+    Define the routes the API we expose using Flask-Restful see docs here
+    http://flask-restful-cn.readthedocs.org/en/0.3.5/quickstart.html#endpoints
+    :param app: The flask app we're initialsing
+    :return:
+    """
+    api = Api(app, default_mediatype='application/json')
+
+    # Setup API routes
+    api.add_resource(Resolutions,
+                     '/api/resolution',
+                     '/api/resolution/<string:id>', endpoint='resolution_route')
 
 
 def output_json(obj, status_code, headers=None):

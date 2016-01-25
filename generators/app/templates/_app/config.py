@@ -1,12 +1,23 @@
-class Config(object):
+class ApplicationConfig:
+    """
+    Application wide config, these values can't be different in Dev, Test, Live.  Typically used for values that
+    need to be read when modules are being initialised.
+    """
+    DATABASE_ENGINE = 'mongo'
+
+
+class EnvironmentConfig:
+    """
+    Environment Config contains values for the Dev, Test, Prod environments the app runs on.
+    """
     DEBUG = False
 
 
-class ProdConfig(Config):
+class ProdConfig(EnvironmentConfig):
     DEBUG = False
 
 
-class DevConfig(Config):
+class DevConfig(EnvironmentConfig):
     DEBUG = True
     MONGODB_SETTINGS = {
         'db': 'iain-test',
