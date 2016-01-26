@@ -52,7 +52,7 @@ def define_flask_restful_routes(app):
     # Setup API routes
     api.add_resource(Resolutions,
                      '/api/resolution',
-                     '/api/resolution/<string:id>', endpoint='resolution_route')
+                     '/api/resolution/<string:res_id>', endpoint='resolution_route')
 
 
 def output_json(obj, status_code, headers=None):

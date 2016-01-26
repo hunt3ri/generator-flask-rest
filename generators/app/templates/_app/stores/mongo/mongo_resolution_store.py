@@ -1,8 +1,9 @@
 from flask import abort
 from mongoengine.queryset import MultipleObjectsReturned, DoesNotExist
-from mongoengine.base import ValidationError
+from mongoengine.base import ValidationError, FieldDoesNotExist
 from mongoengine import Document, StringField
 from app.models.dto import DTOs
+from app.stores.mongo.mongo_store import MongoStore
 
 class Resolution(Document):
     """
@@ -12,7 +13,7 @@ class Resolution(Document):
     title = StringField(required=True)
 
 
-class MongoResolutionStore:
+class MongoResolutionStore(MongoStore):
     """
     Mongo implementation of ResolutionStore
     """
@@ -29,12 +30,27 @@ class MongoResolutionStore:
         except (MultipleObjectsReturned, DoesNotExist, ValidationError):
             abort(404)
 
-        resolution_dict = resolution.to_mongo().to_dict()
+        resolution_dict = self.get_dict(resolution, 'res_id')
 
-        # TODO add helper or base class to make this generic
-        temp_id = str(resolution_dict['_id'])
-        resolution_dict.pop('_id')
-        resolution_dict['id'] = temp_id
+        resolution_dto = DTOs.ResolutionDTO(**resolution_dict)
+
+        return resolution_dto
+
+    def save(self, resolution_json):
+        """
+        Takes the supplied Json and translates it to a mongo object, before saving to the database
+        :param resolution_json: Resolution defined as Json
+        :return: New resolution object
+        """
+
+        try:
+            resolution = Resolution.from_json(resolution_json)
+        except FieldDoesNotExist as e:
+            abort(500, 'Field Does Not Exist Error: ' + str(e))
+
+        resolution.save()
+
+        resolution_dict = self.get_dict(resolution, 'res_id')
 
         resolution_dto = DTOs.ResolutionDTO(**resolution_dict)
 

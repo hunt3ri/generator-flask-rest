@@ -1,5 +1,7 @@
 from flask_restful import Resource, reqparse, fields, marshal
 from app.stores import resolution_store
+from flask import request
+import json
 
 
 
@@ -9,10 +11,11 @@ class Hello:
         self.title = title
 
 task_fields = {
-    'id': fields.String,
+    'resId': fields.String(attribute='res_id'),
     'title': fields.String,
     'url': fields.Url('resolution_route', absolute=True)
 }
+
 
 class Resolutions(Resource):
 
@@ -22,23 +25,20 @@ class Resolutions(Resource):
         self.reqparse.add_argument('title', type=str, required=True, help='No title provided', location='json')
         super().__init__()
 
-    def get(self, id):
+    def get(self, res_id):
 
-        resolution = resolution_store.get_or_404(id)
+        resolution = resolution_store.get_or_404(res_id)
 
         return marshal(resolution._asdict(), task_fields), 200
 
-    # def post(self):
-    #
-    #     # Get json from request as a string which mongoengine can process
-    #     request_json = json.dumps(request.get_json())
-    #
-    #     resolution = Resolution.from_json(request_json)
-    #     resolution.save()
-    #
-    #     # Use to_mongo() method to create dict representation of object so it's compatible with flask-restful
-    #     return marshal(resolution.to_mongo(), task_fields), 201
-    #
+    def post(self):
+        # Get json from request as a string which mongoengine can process
+        request_json = json.dumps(request.get_json())
+
+        resolution = resolution_store.save(request_json)
+
+        return marshal(resolution._asdict(), task_fields), 201
+
     # def put(self, _id):
     #
     #     try:

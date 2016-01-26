@@ -1,5 +1,6 @@
 from collections import namedtuple
 
+
 class DTOs:
     """
     Class is a holder for Data Transer Objects (DTOs) allowing us to make the code more expressive and readable
@@ -7,5 +8,5 @@ class DTOs:
     """
 
     ResolutionDTO = namedtuple('ResolutionDTO', [
-        'id',
+        'res_id',
         'title'])
