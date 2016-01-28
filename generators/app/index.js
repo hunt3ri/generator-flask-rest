@@ -42,7 +42,8 @@ module.exports = yeoman.generators.Base.extend({
             
             // Copy scaffold files into the app
             var appDir = this.appName + "/app";
-            this.bulkDirectory('_app', appDir, null)
+            this.bulkDirectory('_app', this.appName + '/app', null)
+            this.bulkDirectory('_tests', this.appName + '/tests', null)
         }
     },
     
