@@ -26,12 +26,39 @@ class Resolutions(Resource):
         super().__init__()
 
     def get(self, res_id):
+        """
+        Get a resolution for the supplied res_id
+        ---
+        tags:
+          - resolutions
+        responses:
+          200:
+            description: User Found
+          404:
+            description: User Not Found
+          500:
+            description: Server Error
+        """
 
         resolution = resolution_store.get_or_404(res_id)
 
         return marshal(resolution._asdict(), task_fields), 200
 
     def post(self):
+        """
+        Create a new resolution
+        ---
+        tags:
+          - resolutions
+        responses:
+          201:
+            description: Resolution created
+          404:
+            description: User Not Found
+          500:
+            description: Server Error
+        """
+
         # Get json from request as a string which mongoengine can process
         request_json = json.dumps(request.get_json())
 

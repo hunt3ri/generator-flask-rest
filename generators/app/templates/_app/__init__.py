@@ -3,7 +3,6 @@ import os
 
 from flask import Flask, make_response
 from flask_restful import Api
-from app.api.resolutions import Resolutions
 from mongoengine import connect, Document
 from pymongo import uri_parser
 
@@ -33,11 +32,11 @@ def bootstrap_app():
         create_mongo_connection(settings)
 
     define_flask_restful_routes(app)
-                     
+
     # Register web blueprint to allow us to show welcome page
     from .web import main as main_blueprint
     app.register_blueprint(main_blueprint)
-    
+
     return app
 
 
@@ -46,14 +45,17 @@ def define_flask_restful_routes(app):
     Define the routes the API we expose using Flask-Restful see docs here
     http://flask-restful-cn.readthedocs.org/en/0.3.5/quickstart.html#endpoints
     :param app: The flask app we're initialsing
-    :return:
     """
+    # Import API classes
+    from app.api.resolutions import Resolutions
+    from app.api.swagger_docs import SwaggerDocs
+
     api = Api(app, default_mediatype='application/json')
 
     # Setup API routes
-    api.add_resource(Resolutions,
-                     '/api/resolution',
-                     '/api/resolution/<string:res_id>', endpoint='resolution_route')
+    api.add_resource(Resolutions, '/api/resolution', endpoint="post_resolution", methods=['POST'])
+    api.add_resource(Resolutions, '/api/resolution/<string:res_id>', endpoint="resolution", methods=['GET', 'PUT', 'DELETE'])
+    api.add_resource(SwaggerDocs, '/api/docs')
 
 
 def output_json(obj, status_code, headers=None):
