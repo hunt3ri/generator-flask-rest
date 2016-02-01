@@ -13,7 +13,7 @@ class Hello:
 task_fields = {
     'resId': fields.String(attribute='res_id'),
     'title': fields.String,
-    'url': fields.Url('resolution_route', absolute=True)
+    'url': fields.Url('resolution', absolute=True)
 }
 
 
