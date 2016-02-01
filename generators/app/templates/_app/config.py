@@ -18,6 +18,7 @@ class ProdConfig(EnvironmentConfig):
 
 
 class DevConfig(EnvironmentConfig):
+    API_DOCS_URL = 'http://localhost:5000/docs/?url=http://localhost:5000/api/docs'
     DEBUG = True
     MONGODB_SETTINGS = {
         'db': 'iain-test',
