@@ -35,7 +35,9 @@ def bootstrap_app():
 
     # Register web blueprint to allow us to show welcome page
     from .web import main as main_blueprint
+    from .web import swagger as swagger_blueprint
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(swagger_blueprint)
 
     return app
 
