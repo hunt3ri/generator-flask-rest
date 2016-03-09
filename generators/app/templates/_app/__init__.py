@@ -1,11 +1,9 @@
-import json
 import logging
 import os
-from flask import Flask, make_response
+from flask import Flask
+from flask_cors import CORS
 from flask_restful import Api
 from logging.handlers import RotatingFileHandler
-from mongoengine import connect, Document
-from pymongo import uri_parser
 
 
 app = Flask(__name__)
@@ -20,7 +18,7 @@ def bootstrap_app():
     app.config.from_object('app.config.%sConfig' % env.capitalize())
 
     initialise_logger()
-    app.logger.info('Map-Store-Api Starting Up')
+    app.logger.info('AWS-Flask-Rest Starting Up')
 
     define_api_routes()
     app.logger.info('API Routes defined')
@@ -30,6 +28,10 @@ def bootstrap_app():
     from .web import swagger as swagger_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(swagger_blueprint)
+
+    # Allow CORS on all requests
+    app.logger.info('Allowing CORS on all requests')
+    CORS(app)
 
     return app
 
