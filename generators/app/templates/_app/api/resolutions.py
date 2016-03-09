@@ -1,5 +1,4 @@
 from flask_restful import Resource, reqparse, fields, marshal
-from app.stores import resolution_store
 from flask import request
 import json
 
@@ -40,9 +39,9 @@ class Resolutions(Resource):
             description: Server Error
         """
 
-        resolution = resolution_store.get_or_404(res_id)
+        #resolution = resolution_store.get_or_404(res_id)
 
-        return marshal(resolution._asdict(), task_fields), 200
+        #return marshal(resolution._asdict(), task_fields), 200
 
     def post(self):
         """
@@ -60,11 +59,11 @@ class Resolutions(Resource):
         """
 
         # Get json from request as a string which mongoengine can process
-        request_json = json.dumps(request.get_json())
+        #request_json = json.dumps(request.get_json())
 
-        resolution = resolution_store.save(request_json)
+        #resolution = resolution_store.save(request_json)
 
-        return marshal(resolution._asdict(), task_fields), 201
+        #return marshal(resolution._asdict(), task_fields), 201
 
     # def put(self, _id):
     #

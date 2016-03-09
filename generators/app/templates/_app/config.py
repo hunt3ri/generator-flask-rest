@@ -1,12 +1,5 @@
 import logging
 
-class ApplicationConfig:
-    """
-    Application wide config, these values can't be different in Dev, Test, Live.  Typically used for values that
-    need to be read when modules are being initialised.
-    """
-    DATABASE_ENGINE = 'mongo'
-
 
 class EnvironmentConfig:
     """
