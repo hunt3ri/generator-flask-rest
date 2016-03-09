@@ -1,3 +1,5 @@
+import logging
+
 class ApplicationConfig:
     """
     Application wide config, these values can't be different in Dev, Test, Live.  Typically used for values that
@@ -20,6 +22,8 @@ class ProdConfig(EnvironmentConfig):
 class DevConfig(EnvironmentConfig):
     API_DOCS_URL = 'http://localhost:5000/docs/?url=http://localhost:5000/api/docs'
     DEBUG = True
+    LOG_DIR = 'logs'
+    LOG_LEVEL = logging.DEBUG
     MONGODB_SETTINGS = {
         'db': 'iain-test',
         'host': '192.168.99.100',

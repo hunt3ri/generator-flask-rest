@@ -1,21 +1,26 @@
 import json
+import logging
 import os
-
 from flask import Flask, make_response
 from flask_restful import Api
+from logging.handlers import RotatingFileHandler
 from mongoengine import connect, Document
 from pymongo import uri_parser
+
+
+app = Flask(__name__)
 
 
 def bootstrap_app():
     """
     Bootstrap function that intialises the app and config
     """
-    app = Flask(__name__)
-
     # Load Config, default to Dev if config environment var not set
     env = os.environ.get('FLASK_REST_CONFIG', 'Dev')
     app.config.from_object('app.config.%sConfig' % env.capitalize())
+
+    initialise_logger()
+    app.logger.info('Map-Store-Api Starting Up')
 
     # Initialise mongo db with app instance and config
     if 'MONGODB_SETTINGS' in app.config:
@@ -40,6 +45,27 @@ def bootstrap_app():
     app.register_blueprint(swagger_blueprint)
 
     return app
+
+
+def initialise_logger():
+    """
+    Read environment config then initialise a 1MB rotating log.  Prod Log Level can be reduced to help diagnose Prod
+    only issues.
+    """
+
+    log_dir = app.config['LOG_DIR']
+    log_level = app.config['LOG_LEVEL']
+
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+
+    file_handler = RotatingFileHandler(log_dir + '/map-store-api.log', 'a', 1 * 1024 * 1024, 10)
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(log_level)
 
 
 def define_flask_restful_routes(app):
