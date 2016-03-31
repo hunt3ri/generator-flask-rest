@@ -4,3 +4,6 @@ venv
 
 # Pycharm
 .idea
+
+# App
+logs/
