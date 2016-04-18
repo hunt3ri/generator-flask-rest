@@ -15,10 +15,9 @@ class ProdConfig(EnvironmentConfig):
 class DevConfig(EnvironmentConfig):
     API_DOCS_URL = 'http://localhost:5000/docs/?url=http://localhost:5000/api/docs'
     DEBUG = True
+    DYNAMODB_CONFIG = {
+        'region_name': 'eu-west-1',
+        'endpoint_url': 'https://dynamodb.eu-west-1.amazonaws.com'
+    }
     LOG_DIR = 'logs'
     LOG_LEVEL = logging.DEBUG
-    MONGODB_SETTINGS = {
-        'db': 'iain-test',
-        'host': '192.168.99.100',
-        'port': 27017
-    }

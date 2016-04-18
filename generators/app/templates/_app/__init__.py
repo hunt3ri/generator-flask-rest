@@ -4,6 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
 from logging.handlers import RotatingFileHandler
+from migrations.dynamo import migration_runner
 
 
 app = Flask(__name__)
@@ -19,6 +20,8 @@ def bootstrap_app():
 
     initialise_logger()
     app.logger.info('AWS-Flask-Rest Starting Up')
+
+    run_dynamo_migrations(env)
 
     define_api_routes()
     app.logger.info('API Routes defined')
@@ -55,6 +58,15 @@ def initialise_logger():
 
     app.logger.addHandler(file_handler)
     app.logger.setLevel(log_level)
+
+
+def run_dynamo_migrations(environment):
+    """
+    Create any necessary Dynamo tables for the current environment
+    :param environment: The current running environment, eg Dev, Staging etc
+    """
+    app.logger.info('Running DynamoDB Migrations')
+    migration_runner.run(environment, app.logger, app.config['DYNAMODB_CONFIG'])
 
 
 def define_api_routes():
