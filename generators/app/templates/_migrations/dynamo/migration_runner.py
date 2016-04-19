@@ -9,8 +9,8 @@ def run(environment, logger, dynamo_config):
     :param logger: Logger object, this is passed to avoid circular dependencies
     :param dynamo_config: Config needs to be passed as app_context not yet available to the full app
     """
-    customer_table_name = str('map_store.' + environment + '.' + 'customers').lower()
-    orders_table_name = str('map_store.' + environment + '.' + 'orders').lower()
+    customer_table_name = str('flask_micro.' + environment + '.' + 'customers').lower()
+    orders_table_name = str('flask_micro.' + environment + '.' + 'orders').lower()
 
     create_customers_table(customer_table_name, logger, dynamo_config)
     create_orders_table(orders_table_name, logger, dynamo_config)

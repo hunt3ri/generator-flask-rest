@@ -15,11 +15,11 @@ def bootstrap_app():
     Bootstrap function that intialises the app and config
     """
     # Load Config, default to Dev if config environment var not set
-    env = os.environ.get('FLASK_REST_CONFIG', 'Dev')
+    env = os.environ.get('FLASK_MICRO_CONFIG', 'Dev')
     app.config.from_object('app.config.%sConfig' % env.capitalize())
 
     initialise_logger()
-    app.logger.info('AWS-Flask-Rest Starting Up')
+    app.logger.info('AWS-Flask-Micro Starting Up')
 
     run_dynamo_migrations(env)
 

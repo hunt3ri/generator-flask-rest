@@ -16,14 +16,14 @@ class Order(Model):
     """
     Describes an order containing one or more OrderItems
     """
-    order_id = StringType()
-    order_status = StringType()
-    customer_email_address = EmailType()
-    order_date = DateTimeType()
-    order_items = ListType(ModelType(OrderItem), min_size=1)
-    price_before_vat = DecimalType(required=True)
-    total_vat = DecimalType(required=True)
-    total_price = DecimalType(required=True)
+    order_id = StringType(serialized_name='orderId')
+    order_status = StringType(serialized_name='orderStatus')
+    customer_email_address = EmailType(serialized_name='customerEmailAddress')
+    order_date = DateTimeType(serialized_name='orderDate')
+    order_items = ListType(ModelType(OrderItem), min_size=1, serialized_name='orderItems')
+    total_price_before_vat = DecimalType(required=True, serialized_name='totalPriceBeforeVat')
+    total_vat = DecimalType(required=True, serialized_name='totalVat')
+    total_price = DecimalType(required=True, serialized_name='totalPrice')
 
 
 class CustomerOrder(Model):
