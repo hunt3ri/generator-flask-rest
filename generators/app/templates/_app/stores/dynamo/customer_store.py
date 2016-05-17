@@ -1,6 +1,15 @@
 import os
 import app.stores.dynamo.utils as utils
+from botocore.exceptions import ClientError
 from app.models.customers import Customer
+from app import app
+
+
+class CustomerStoreError(Exception):
+    """
+    Custom exception to notify the caller error has occurred within the CustomerStore
+    """
+    pass
 
 
 class CustomerStore:
@@ -35,10 +44,15 @@ class CustomerStore:
         """
         Save supplied customer object to database
         """
-        cust = Customer(customer)
-        self.customer_table.put_item(
-            Item=cust.to_primitive()
-        )
+        try:
+            cust = Customer(customer)
+            self.customer_table.put_item(
+                Item=cust.to_primitive()
+            )
+        except ClientError as e:
+            app.logger.error('Error saving customer record {0}, exception {1}'.format(customer.email_address, str(e)))
+            raise CustomerStoreError('Error saving customer record {0}, exception {1}'.format(customer.email_address,
+                                                                                              str(e)))
 
     def get(self, email_address):
         """

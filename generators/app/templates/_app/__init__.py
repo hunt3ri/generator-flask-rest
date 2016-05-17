@@ -36,6 +36,7 @@ def bootstrap_app():
     app.logger.info('Allowing CORS on all requests')
     CORS(app)
 
+    app.logger.debug('App successfully Bootstrapped - Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)')
     return app
 
 
@@ -75,12 +76,11 @@ def define_api_routes():
     http://flask-restful-cn.readthedocs.org/en/0.3.5/quickstart.html#endpoints
     """
     # Import API classes
-    from app.api.resolutions import Resolutions
+    from app.api.customers import Customers
     from app.api.swagger_docs import SwaggerDocs
 
     api = Api(app, default_mediatype='application/json')
 
     # Setup API routes
-    api.add_resource(Resolutions, '/api/resolution', endpoint="post_resolution", methods=['POST'])
-    api.add_resource(Resolutions, '/api/resolution/<string:res_id>', endpoint="resolution", methods=['GET', 'PUT', 'DELETE'])
+    api.add_resource(Customers, '/api/customers', endpoint='customers')
     api.add_resource(SwaggerDocs, '/api/docs')
