@@ -82,5 +82,6 @@ def define_api_routes():
     api = Api(app, default_mediatype='application/json')
 
     # Setup API routes
-    api.add_resource(Customers, '/api/customers', endpoint='customers')
+    api.add_resource(Customers, '/api/customers', endpoint='customer_put', methods=['PUT'])
+    api.add_resource(Customers, '/api/customers/<string:email_address>', endpoint="customers", methods=['GET'])
     api.add_resource(SwaggerDocs, '/api/docs')

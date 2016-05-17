@@ -32,3 +32,15 @@ class CustomerService:
         except CustomerStoreError:
             app.logger.debug('Error creating customer {0}'.format(customer.email_address))
             raise CustomerServiceError("Error creating customer")
+
+    def get_customer_by_email(self, email_address):
+        """
+        Gets customer by email address returns none if not found
+        :param email_address: Email address in scope
+        :return: Customer or None
+        """
+        customer_store = CustomerStore()
+
+        customer = customer_store.get(email_address)
+
+        return customer

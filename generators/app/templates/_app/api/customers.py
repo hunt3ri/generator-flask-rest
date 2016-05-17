@@ -11,7 +11,7 @@ class Customers(Resource):
 
     def put(self):
         """
-        Get a customer
+        Create a customer
         ---
         tags:
           - customers
@@ -21,7 +21,7 @@ class Customers(Resource):
           - in: body
             name: body
             required: true
-            description: Json request for creating account
+            description: Json request for creating a customer
             schema:
               type: object
               properties:
@@ -55,3 +55,34 @@ class Customers(Resource):
             return {'Status': 'SUCCESS'}, 201
         except CustomerServiceError:
             return {'Status': 'ERROR'}, 500
+
+    def get(self, email_address):
+        """
+        Get a customer
+        ---
+        tags:
+          - customers
+        produces:
+          - application/json
+        parameters:
+          - name: email_address
+            in: path
+            description: Email address for customer you're looking for
+            required: true
+            type: string
+            default: test.mctest@test.com
+        responses:
+          200:
+            description: Customer Found
+          404:
+            description: Customer Not Found
+          500:
+            description: Server Error
+        """
+        customer_service = CustomerService()
+        customer = customer_service.get_customer_by_email(email_address)
+
+        if customer:
+            return customer.to_primitive(), 200
+        else:
+            return None, 404
