@@ -15,4 +15,9 @@ class SwaggerDocs(Resource):
           200:
             description: Swagger YAML successfully generated
         """
-        return jsonify(swagger(current_app))
+        swag = swagger(current_app)
+        swag['info']['title'] = "Flask-Rest"
+        swag['info']['description'] = "Flask-Rest turbocharged Rest/MicroService Development"
+        swag['info']['version'] = "0.1.0"
+
+        return jsonify(swag)

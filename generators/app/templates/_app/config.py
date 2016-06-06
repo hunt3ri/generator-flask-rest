@@ -13,7 +13,7 @@ class ProdConfig(EnvironmentConfig):
 
 
 class DevConfig(EnvironmentConfig):
-    API_DOCS_URL = 'http://localhost:5000/docs/?url=http://localhost:5000/api/docs'
+    API_DOCS_URL = 'http://localhost:5000/api-docs/?url=http://localhost:5000/docs'
     DEBUG = True
     DYNAMODB_CONFIG = {
         'region_name': 'eu-west-1',
