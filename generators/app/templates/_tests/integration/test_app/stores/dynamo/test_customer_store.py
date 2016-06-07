@@ -36,18 +36,3 @@ class TestCustomerStore(unittest.TestCase):
 
         # Assert
         self.assertEqual(cust, None, 'Unmatched customer should return None, not raise an exception')
-
-
-    def test_update_changes_values(self):
-        # Arrange
-        self.test_cust.first_name = 'Iain'
-        self.test_cust.surname = 'Hunter'
-
-        # Act
-        self.customer_store.update(self.test_cust)
-
-        # Assert
-        updated_cust = self.customer_store.get(self.test_cust.email_address)
-
-        self.assertEqual(updated_cust.first_name, 'Iain')
-        self.assertEqual(updated_cust.surname, 'Hunter')

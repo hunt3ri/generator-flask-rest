@@ -46,8 +46,8 @@ def create_orders_table(table_name, logger, dynamo_config):
             },
         ],
         ProvisionedThroughput={
-            'ReadCapacityUnits': 5,
-            'WriteCapacityUnits': 5
+            'ReadCapacityUnits': 1,
+            'WriteCapacityUnits': 1
         }
     )
 

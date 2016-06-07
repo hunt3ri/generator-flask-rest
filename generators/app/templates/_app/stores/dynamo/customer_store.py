@@ -76,26 +76,6 @@ class CustomerStore:
         customer = Customer(item)
         return customer
 
-    def update(self, customer):
-        """
-        Updates the entire customer record
-        """
-
-        # Ensure customer exists prior to update, otherwise we'll create a new cust record which is likely to
-        # confuse the caller
-        self.get(customer.email_address)
-
-        self.customer_table.update_item(
-            Key={
-                'emailAddress': customer.email_address
-            },
-            UpdateExpression='SET firstName = :firstName, surname = :surname',
-            ExpressionAttributeValues={
-                ':firstName': customer.first_name,
-                ':surname': customer.surname
-            }
-        )
-
     def delete(self, email_address):
         """
         Deletes customer for supplied email address
