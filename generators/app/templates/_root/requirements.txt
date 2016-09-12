@@ -1,9 +1,9 @@
 aniso8601==1.1.0
-boto3==1.3.1
-botocore==1.4.19
+boto3==1.4.0
+botocore==1.4.53
 click==6.6
 docutils==0.12
-Flask==0.11
+Flask==0.11.1
 Flask-Cors==2.1.2
 Flask-RESTful==0.3.5
 Flask-Script==2.0.5
@@ -15,6 +15,7 @@ MarkupSafe==0.23
 python-dateutil==2.5.3
 pytz==2015.7
 PyYAML==3.11
+s3transfer==0.1.3
 schematics==2.0.0a1
 six==1.10.0
-Werkzeug==0.11.10
+Werkzeug==0.11.11
